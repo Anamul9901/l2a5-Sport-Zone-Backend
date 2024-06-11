@@ -11,7 +11,7 @@ const userValidationSchema = z.object({
       .max(20, { message: 'Password can not be more than 20 characters' }),
     phone: z.string(),
     role: z.enum(['admin', 'user']),
-    address: z.string(),
+    address: z.string().optional(),
   }),
 });
 

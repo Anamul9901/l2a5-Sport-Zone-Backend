@@ -9,7 +9,6 @@ import { TErrorSources } from '../interface/error';
 import config from '../config';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
-  // setting default values
   let statusCode = 500;
   let message = 'something went wrong';
 
@@ -20,7 +19,6 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     },
   ];
 
-  // aivabe ZodError theke error asce kina buja jai
   if (err instanceof ZodError) {
     const simplifiedError = handleZodError(err);
     statusCode = simplifiedError?.statusCode;
@@ -28,7 +26,6 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     errorSources = simplifiedError?.errorSources;
     console.log(simplifiedError);
   } else if (err?.name === 'ValidationError') {
-    // console.log('mongoos er validation error');
     const simplifiedError = handleValidationError(err);
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
@@ -62,7 +59,6 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     ];
   }
 
-  // ultimate return
   return res.status(statusCode).json({
     success: false,
     message,
@@ -72,13 +68,3 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
 };
 
 export default globalErrorHandler;
-
-//  error pattern
-/*
-success message
-errorSources: [
-path: '',
-message: ''
-]
-stack
-*/
