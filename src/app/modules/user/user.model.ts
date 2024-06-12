@@ -50,4 +50,4 @@ userSchema.post('save', function (doc, next) {
   next();
 });
 
-export const User = model<TUser>('Usre', userSchema);
+export const User = model<TUser>('User', userSchema);
