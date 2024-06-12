@@ -8,14 +8,15 @@ import config from '../../config';
 
 const signUpUserIntoDB = async (payload: TUser) => {
   const result = await User.create(payload);
-  return result;
+  const { _id, name, email, role, phone, address } = result;
+  const finalResult = { _id, name, email, role, phone, address };
+  return finalResult;
 };
 
 const loginUser = async (payload: TLoginUser) => {
-
   //checking if ther user is exist
   const isUserExists = await User.findOne({ email: payload?.email });
-  // console.log(isUserExists);
+  console.log(isUserExists);
   if (!isUserExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Thsis user is not found !');
   }
@@ -35,15 +36,15 @@ const loginUser = async (payload: TLoginUser) => {
   const jwtPayload = {
     email: isUserExists?.email,
     role: isUserExists?.role,
+    userId: isUserExists?._id,
   };
-
 
   const accessTonen = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
     expiresIn: '1d',
   });
 
-  const { _id, name, email, phone, role, address } = isUserExists;
-  const userData = { _id, name, email, phone, role, address };
+  const { _id, name, email, role, phone, address } = isUserExists;
+  const userData = { _id, name, email, role, phone, address };
 
   return {
     token: accessTonen,

@@ -2,6 +2,11 @@ import mongoose, { Schema } from 'mongoose';
 import { TBooking } from './booking.interface';
 
 const bookingSchema = new mongoose.Schema<TBooking>({
+  facility: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'Facility',
+  },
   date: {
     type: String,
     required: true,
@@ -19,11 +24,6 @@ const bookingSchema = new mongoose.Schema<TBooking>({
     required: true,
     ref: 'User',
   },
-  facility: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: 'Facility',
-  },
   payableAmount: {
     type: Number,
     required: true,
@@ -31,6 +31,7 @@ const bookingSchema = new mongoose.Schema<TBooking>({
   isBooked: {
     type: String,
     enum: ['confirmed', 'unconfirmed', 'canceled'],
+    default: 'confirmed',
   },
 });
 

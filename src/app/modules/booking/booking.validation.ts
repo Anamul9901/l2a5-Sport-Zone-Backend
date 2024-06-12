@@ -18,7 +18,7 @@ const createBookingValidationSchema = z.object({
       user: z.string(),
       facility: z.string(),
       payableAmount: z.number().nonnegative().optional(),
-      isBooked: z.enum(['confirmed', 'unconfirmed', 'canceled']),
+      isBooked: z.enum(['confirmed', 'unconfirmed', 'canceled']).optional(),
     })
     .refine(
       (body) => {

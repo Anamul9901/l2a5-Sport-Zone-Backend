@@ -3,17 +3,16 @@ import AppError from '../../errors/AppError';
 import { TBooking } from './booking.interface';
 import { Booking } from './booking.model';
 import { Facility } from '../facility/facility.model';
+import { JwtPayload } from 'jsonwebtoken';
 
 const createBookingIntoDB = async (payload: TBooking) => {
   const { date, startTime, endTime, facility } = payload;
-  console.log('payload', payload);
 
   //get the schedules of the faculties
   const assignedSchedules = await Booking.find({
     facility,
     date: { $in: date },
   }).select('date startTime endTime');
-  console.log('assignedSchedules:', assignedSchedules);
 
   const newSchedule = {
     date,
@@ -52,14 +51,18 @@ const createBookingIntoDB = async (payload: TBooking) => {
   const differenceInHours = differenceInMilliseconds / 3600000;
 
   const payableAmount = Number(pricePerHour) * differenceInHours;
-  console.log('payableAmount:', payableAmount);
 
   const result = await Booking.create({ ...payload, payableAmount });
   return result;
 };
 
 const getAllFacilityFromDB = async () => {
-  const result = await Booking.find().populate('facility').populate('user');
+  const result = await Booking.find().populate('facility');
+  return result;
+};
+
+const getSingleFacilityFromDB = async (userId: string) => {
+  const result = await Booking.find({ user: userId });
   return result;
 };
 
@@ -74,5 +77,6 @@ const deleteFacilityFromDB = async (id: string) => {
 export const BookingService = {
   createBookingIntoDB,
   getAllFacilityFromDB,
+  getSingleFacilityFromDB,
   deleteFacilityFromDB,
 };

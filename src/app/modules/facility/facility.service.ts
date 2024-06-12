@@ -3,14 +3,33 @@ import { Facility } from './facility.model';
 
 const createFacilityIntoDB = async (payload: TFacility) => {
   const result = await Facility.create(payload);
-  return result;
+  const { _id, name, description, pricePerHour, location, isDeleted } = result;
+  const finalResult = {
+    _id,
+    name,
+    description,
+    pricePerHour,
+    location,
+    isDeleted,
+  };
+  return finalResult;
 };
 
 const updateFacilityFromDB = async (id: string, payload: TFacility) => {
   const result = await Facility.findByIdAndUpdate({ _id: id }, payload, {
     new: true,
   });
-  return result;
+  const { _id, name, description, pricePerHour, location, isDeleted }: any =
+    result;
+  const finalResult = {
+    _id,
+    name,
+    description,
+    pricePerHour,
+    location,
+    isDeleted,
+  };
+  return finalResult;
 };
 
 const getAllFacilityFromDB = async () => {
@@ -24,7 +43,17 @@ const deleteFacilityFromDB = async (id: string) => {
     { isDeleted: true },
     { new: true }
   );
-  return result;
+  const { _id, name, description, pricePerHour, location, isDeleted }: any =
+    result;
+  const finalResult = {
+    _id,
+    name,
+    description,
+    pricePerHour,
+    location,
+    isDeleted,
+  };
+  return finalResult;
 };
 
 export const FacilityService = {
