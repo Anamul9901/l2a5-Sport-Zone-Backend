@@ -1,8 +1,13 @@
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { User } from '../user/user.model';
-import { TLoginUser } from './auth.interface';
+import { TLoginUser, TUser } from './auth.interface';
 import bcrypt from 'bcrypt';
+
+const signUpUserIntoDB = async (payload: TUser) => {
+  const result = await User.create(payload);
+  return result;
+};
 
 const loginUser = async (payload: TLoginUser) => {
   console.log(payload);
@@ -25,5 +30,6 @@ const loginUser = async (payload: TLoginUser) => {
 };
 
 export const AuthServices = {
+  signUpUserIntoDB,
   loginUser,
 };

@@ -9,7 +9,7 @@ const router = Router();
 const moduleRoutes = [
   {
     path: '/auth',
-    route: UserRoutes,
+    route: AuthRoutes,
   },
   {
     path: '/',
@@ -18,10 +18,6 @@ const moduleRoutes = [
   {
     path: '/bookings',
     route: BookingRoutes,
-  },
-  {
-    path: '/auth',
-    route: AuthRoutes,
   },
 ];
 

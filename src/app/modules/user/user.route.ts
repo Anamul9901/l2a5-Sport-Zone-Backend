@@ -5,10 +5,10 @@ import { UserControllers } from './user.controller';
 
 const router = express.Router();
 
-router.post(
-  '/signup',
-  validateRequest(UserValidation.userValidationSchema),
-  UserControllers.signUpUser
-);
+// router.post(
+//   '/signup',
+//   validateRequest(UserValidation.userValidationSchema),
+//   UserControllers.signUpUser
+// );
 
 export const UserRoutes = router;
