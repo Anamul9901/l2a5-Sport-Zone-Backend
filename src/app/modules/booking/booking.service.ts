@@ -2,9 +2,11 @@ import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { TBooking } from './booking.interface';
 import { Booking } from './booking.model';
+import { Facility } from '../facility/facility.model';
 
 const createBookingIntoDB = async (payload: TBooking) => {
-  const { date, startTime, endTime, user, facility, payableAmount } = payload;
+  const { date, startTime, endTime, user, facility } = payload;
+  console.log('payload', payload);
 
   //get the schedules of the faculties
   const assignedSchedules = await Booking.find({
@@ -18,7 +20,6 @@ const createBookingIntoDB = async (payload: TBooking) => {
     startTime,
     endTime,
   };
-  // console.log("newSchedule:", newSchedule);
 
   assignedSchedules.forEach((schedule) => {
     const existingStartTime: any = new Date(
@@ -38,7 +39,19 @@ const createBookingIntoDB = async (payload: TBooking) => {
     }
   });
 
-  const result = await Booking.create(payload);
+  //create payableAmount
+  const facilityData = await Facility.findById(facility);
+  const pricePerHour = facilityData?.pricePerHour;
+
+  const start: any = new Date(`1970-01-10T${newSchedule.startTime}:00`);
+  const end: any = new Date(`1970-01-10T${newSchedule.endTime}:00`);
+  const differenceInMilliseconds = end - start;
+  const differenceInHours = differenceInMilliseconds / 3600000;
+
+  const payableAmount = Number(pricePerHour) * differenceInHours;
+  console.log('payableAmount:', payableAmount);
+
+  const result = await Booking.create({...payload, payableAmount});
   return result;
 };
 
