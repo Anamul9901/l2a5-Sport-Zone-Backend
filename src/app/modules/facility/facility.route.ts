@@ -2,6 +2,7 @@ import express from 'express';
 import validateRequest from '../../middlwares/validateRequest';
 import { FacilityValidation } from './facility.validation';
 import { FacilityControllers } from './facility.controller';
+import auth from '../../middlwares/auth';
 
 const router = express.Router();
 
@@ -17,7 +18,7 @@ router.put(
   FacilityControllers.updateFacility
 );
 
-router.get('/facilities', FacilityControllers.getAllFacility);
+router.get('/facility', auth(), FacilityControllers.getAllFacility);
 
 router.delete('/facility/:id', FacilityControllers.deleteFacility);
 
