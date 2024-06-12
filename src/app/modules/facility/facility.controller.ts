@@ -27,6 +27,7 @@ const updateFacility = catchAsync(async (req, res) => {
 });
 
 const getAllFacility = catchAsync(async (req, res) => {
+  console.log('test', req.user);
   const result = await FacilityService.getAllFacilityFromDB();
 
   sendResponse(res, {
