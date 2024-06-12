@@ -17,6 +17,7 @@ const createBookingValidationSchema = z.object({
         .regex(/^\d{2}:\d{2}$/, 'Invalid time format, should be HH:MM'),
       user: z.string(),
       facility: z.string(),
+      payableAmount: z.number().nonnegative().optional(),
       isBooked: z.enum(['confirmed', 'unconfirmed', 'canceled']),
     })
     .refine(
