@@ -1,14 +1,17 @@
-export type TUser = {
+export interface TUser {
+  post: any;
+  pre: any;
   name: string;
   email: string;
   password: string;
   phone: string;
   role: 'admin' | 'user';
   address: string;
+}
+
+export type TLoginUser = {
+  email: string;
+  password: string;
 };
 
 
-export type TLoginUser = {
-    email: string;
-    password: string;
-  };

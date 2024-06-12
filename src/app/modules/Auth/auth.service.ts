@@ -3,6 +3,8 @@ import AppError from '../../errors/AppError';
 import { User } from '../user/user.model';
 import { TLoginUser, TUser } from './auth.interface';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import config from '../../config';
 
 const signUpUserIntoDB = async (payload: TUser) => {
   const result = await User.create(payload);
@@ -10,11 +12,10 @@ const signUpUserIntoDB = async (payload: TUser) => {
 };
 
 const loginUser = async (payload: TLoginUser) => {
-  console.log(payload);
 
   //checking if ther user is exist
   const isUserExists = await User.findOne({ email: payload?.email });
-  console.log(isUserExists);
+  // console.log(isUserExists);
   if (!isUserExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Thsis user is not found !');
   }
@@ -24,9 +25,30 @@ const loginUser = async (payload: TLoginUser) => {
     payload?.password,
     isUserExists?.password
   );
-  console.log(isPasswordMatched);
+  // console.log(isPasswordMatched);
+  if (!isPasswordMatched) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Password is incorrect !');
+  }
 
-  return { isUserExists };
+  // create token and sent to the client
+
+  const jwtPayload = {
+    email: isUserExists?.email,
+    role: isUserExists?.role,
+  };
+
+
+  const accessTonen = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
+    expiresIn: '1d',
+  });
+
+  const { _id, name, email, phone, role, address } = isUserExists;
+  const userData = { _id, name, email, phone, role, address };
+
+  return {
+    token: accessTonen,
+    data: userData,
+  };
 };
 
 export const AuthServices = {
