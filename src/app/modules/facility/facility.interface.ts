@@ -1,3 +1,5 @@
+import { USET_ROLE } from "./facility.constant";
+
 export type TFacility = {
   name: string;
   description: string;
@@ -5,3 +7,5 @@ export type TFacility = {
   location: string;
   isDeleted: boolean;
 };
+
+export type TUserRole = keyof typeof USET_ROLE;
