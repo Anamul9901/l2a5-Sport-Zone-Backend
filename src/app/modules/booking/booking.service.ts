@@ -3,16 +3,20 @@ import AppError from '../../errors/AppError';
 import { TBooking } from './booking.interface';
 import { Booking } from './booking.model';
 import { Facility } from '../facility/facility.model';
-import { JwtPayload } from 'jsonwebtoken';
 
 const createBookingIntoDB = async (payload: TBooking) => {
   const { date, startTime, endTime, facility } = payload;
 
-  //get the schedules of the faculties
+  //get the all schedules of the faculties
   const assignedSchedules = await Booking.find({
     facility,
     date: { $in: date },
-  }).select('date startTime endTime');
+  }).select('date startTime endTime isBooked');
+
+  // if any schedule booked canceled, then it's not count
+  const assignedValidSchedules = assignedSchedules.filter(
+    (schedule) => schedule.isBooked !== 'canceled'
+  );
 
   const newSchedule = {
     date,
@@ -20,7 +24,7 @@ const createBookingIntoDB = async (payload: TBooking) => {
     endTime,
   };
 
-  assignedSchedules.forEach((schedule) => {
+  assignedValidSchedules.forEach((schedule) => {
     const existingStartTime: any = new Date(
       `1970-01-10T${schedule.startTime}:00`
     );
@@ -38,11 +42,21 @@ const createBookingIntoDB = async (payload: TBooking) => {
     }
   });
 
-  //create payableAmount
+  // find the facility
   const facilityData = await Facility.findById(facility);
   if (!facilityData) {
     throw new AppError(httpStatus.NOT_FOUND, `This Facility is not found!`);
   }
+
+
+  // if facility is deleted, then throw error
+  const isValidFacilityData = Object.values(facilityData).find(
+    (facility) => facility?.isDeleted === true
+  );
+  if (isValidFacilityData) {
+    throw new AppError(httpStatus.NOT_FOUND, `This Facility is Deleted!`);
+  }
+
 
   const pricePerHour = facilityData?.pricePerHour;
   const start: any = new Date(`1970-01-10T${newSchedule.startTime}:00`);
