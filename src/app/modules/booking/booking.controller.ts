@@ -26,7 +26,24 @@ const getAllBooking = catchAsync(async (req, res) => {
       data: result,
     });
   }
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Bookings retrieved successfully',
+    data: result,
+  });
+});
 
+const getAvailabilBooking = catchAsync(async (req: any, res) => {
+  const result = await BookingService.getAvailabilFacilityFromDB(req.query);
+  if (!result.length) {
+    sendResponse(res, {
+      statusCode: httpStatus.NOT_FOUND,
+      success: false,
+      message: 'No Data Found',
+      data: result,
+    });
+  }
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -80,5 +97,6 @@ export const BookingControllers = {
   createBooking,
   getAllBooking,
   getSingleBooking,
+  getAvailabilBooking,
   deleteBooking,
 };

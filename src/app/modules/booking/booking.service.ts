@@ -48,7 +48,6 @@ const createBookingIntoDB = async (payload: TBooking) => {
     throw new AppError(httpStatus.NOT_FOUND, `This Facility is not found!`);
   }
 
-
   // if facility is deleted, then throw error
   const isValidFacilityData = Object.values(facilityData).find(
     (facility) => facility?.isDeleted === true
@@ -56,7 +55,6 @@ const createBookingIntoDB = async (payload: TBooking) => {
   if (isValidFacilityData) {
     throw new AppError(httpStatus.NOT_FOUND, `This Facility is Deleted!`);
   }
-
 
   const pricePerHour = facilityData?.pricePerHour;
   const start: any = new Date(`1970-01-10T${newSchedule.startTime}:00`);
@@ -73,6 +71,46 @@ const createBookingIntoDB = async (payload: TBooking) => {
 const getAllFacilityFromDB = async () => {
   const result = await Booking.find().populate('facility');
   return result;
+};
+
+const getAvailabilFacilityFromDB = async (date: any) => {
+  const date2 = date.date;
+  const today = new Date();
+  const formattedDate = today.toISOString().split('T')[0];
+  const startDate = date2 ? date2 : formattedDate;
+  // Retrieve bookings for the specified date
+  const bookings = await Booking.find({ date: startDate }).select(
+    'date startTime endTime isBooked'
+  );
+  console.log('bookings-----------------------:', bookings);
+
+  // available time slots
+  const availableTimeSlots = [
+    { startTime: '08:00', endTime: '09:00' },
+    { startTime: '09:00', endTime: '10:00' },
+    { startTime: '10:00', endTime: '11:00' },
+  ];
+
+  const filterBookedTimeSlots = (timeSlots: any[], bookings: any[]) => {
+    const bookedSlots = bookings.map((booking) => ({
+      startTime: new Date(`1970-01-10T${booking.startTime}:00`),
+      endTime: new Date(`1970-01-10T${booking.endTime}:00`),
+    }));
+
+    return timeSlots.filter(
+      (slot) =>
+        !bookedSlots.some(
+          (bookedSlot) =>
+            slot.startTime < bookedSlot.endTime &&
+            slot.endTime > bookedSlot.startTime
+        )
+    );
+  };
+
+  // available time slots
+  const availableSlots = filterBookedTimeSlots(availableTimeSlots, bookings);
+
+  return availableSlots;
 };
 
 const getSingleFacilityFromDB = async (userId: string) => {
@@ -92,5 +130,6 @@ export const BookingService = {
   createBookingIntoDB,
   getAllFacilityFromDB,
   getSingleFacilityFromDB,
+  getAvailabilFacilityFromDB,
   deleteFacilityFromDB,
 };
