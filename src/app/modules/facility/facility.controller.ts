@@ -28,6 +28,14 @@ const updateFacility = catchAsync(async (req, res) => {
 
 const getAllFacility = catchAsync(async (req, res) => {
   const result = await FacilityService.getAllFacilityFromDB();
+  if (!result.length) {
+    sendResponse(res, {
+      statusCode: httpStatus.NOT_FOUND,
+      success: false,
+      message: 'No Data Found',
+      data: result,
+    });
+  }
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

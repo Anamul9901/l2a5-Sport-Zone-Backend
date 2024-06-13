@@ -18,6 +18,14 @@ const createBooking = catchAsync(async (req, res) => {
 
 const getAllBooking = catchAsync(async (req, res) => {
   const result = await BookingService.getAllFacilityFromDB();
+  if (!result.length) {
+    sendResponse(res, {
+      statusCode: httpStatus.NOT_FOUND,
+      success: false,
+      message: 'No Data Found',
+      data: result,
+    });
+  }
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -28,8 +36,17 @@ const getAllBooking = catchAsync(async (req, res) => {
 });
 
 const getSingleBooking = catchAsync(async (req: JwtPayload, res) => {
-  console.log(req?.user?.userId);
-  const result = await BookingService.getSingleFacilityFromDB(req?.user?.userId);
+  const result = await BookingService.getSingleFacilityFromDB(
+    req?.user?.userId
+  );
+  if (!result.length) {
+    sendResponse(res, {
+      statusCode: httpStatus.NOT_FOUND,
+      success: false,
+      message: 'No Data Found',
+      data: result,
+    });
+  }
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -42,6 +59,14 @@ const getSingleBooking = catchAsync(async (req: JwtPayload, res) => {
 const deleteBooking = catchAsync(async (req, res) => {
   const { id } = req.params;
   const result = await BookingService.deleteFacilityFromDB(id);
+  if (!result) {
+    sendResponse(res, {
+      statusCode: httpStatus.NOT_FOUND,
+      success: false,
+      message: 'No Data Found',
+      data: result,
+    });
+  }
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

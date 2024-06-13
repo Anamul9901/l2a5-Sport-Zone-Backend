@@ -16,7 +16,6 @@ const signUpUserIntoDB = async (payload: TUser) => {
 const loginUser = async (payload: TLoginUser) => {
   //checking if ther user is exist
   const isUserExists = await User.findOne({ email: payload?.email });
-  console.log(isUserExists);
   if (!isUserExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Thsis user is not found !');
   }
@@ -26,7 +25,6 @@ const loginUser = async (payload: TLoginUser) => {
     payload?.password,
     isUserExists?.password
   );
-  // console.log(isPasswordMatched);
   if (!isPasswordMatched) {
     throw new AppError(httpStatus.NOT_FOUND, 'Password is incorrect !');
   }

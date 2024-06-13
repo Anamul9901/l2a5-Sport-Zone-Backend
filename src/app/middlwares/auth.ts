@@ -5,39 +5,35 @@ import AppError from '../errors/AppError';
 import httpStatus from 'http-status';
 import config from '../config';
 import { TUserRole } from '../modules/facility/facility.interface';
+import sendResponse from '../utils/sendResponse';
 
 const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization;
     if (!token) {
-      throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
+      sendResponse(res, {
+        statusCode: httpStatus.UNAUTHORIZED,
+        success: false,
+        message: 'You have no access to this route',
+      });
     }
 
-    jwt.verify(
-      token,
-      config.jwt_access_secret as string,
-      function (err, decoded) {
-        if (err) {
-          throw new AppError(
-            httpStatus.UNAUTHORIZED,
-            'You are not authorized!'
-          );
-        }
-        console.log(decoded);
+    const decoded = jwt.verify(
+      token as string,
+      config.jwt_access_secret as string
+    ) as JwtPayload;
 
-        const role = (decoded as JwtPayload).role;
-        console.log(role);
+    const role = decoded.role;
 
-        if (requiredRoles && !requiredRoles.includes(role)) {
-          throw new AppError(
-            httpStatus.UNAUTHORIZED,
-            'You are not authorized!'
-          );
-        }
-        req.user = decoded as JwtPayload;
-        next();
-      }
-    );
+    if (requiredRoles && !requiredRoles.includes(role)) {
+      sendResponse(res, {
+        statusCode: httpStatus.UNAUTHORIZED,
+        success: false,
+        message: 'You have no access to this route',
+      });
+    }
+    req.user = decoded as JwtPayload;
+    next();
   });
 };
 
