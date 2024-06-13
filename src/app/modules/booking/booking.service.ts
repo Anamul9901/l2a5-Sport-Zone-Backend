@@ -84,27 +84,44 @@ const getAvailabilFacilityFromDB = async (date: any) => {
   );
   console.log('bookings-----------------------:', bookings);
 
-  // available time slots
-  const availableTimeSlots = [
-    { startTime: '08:00', endTime: '09:00' },
-    { startTime: '09:00', endTime: '10:00' },
-    { startTime: '10:00', endTime: '11:00' },
-  ];
+  // 24 hours time slots(1h).
+  interface TimeSlot {
+    startTime: string;
+    endTime: string;
+  }
+  
+  const generateAllDayTimeSlots = (): TimeSlot[] => {
+    const slots: TimeSlot[] = [];
+    for (let hour = 0; hour < 24; hour++) {
+      const startTime = `${hour.toString().padStart(2, '0')}:00`;
+      const endTime = `${(hour + 1).toString().padStart(2, '0')}:00`;
+      slots.push({ startTime, endTime });
+    }
+    return slots;
+  };
+  
+  const availableTimeSlots = generateAllDayTimeSlots();
+  console.log(availableTimeSlots);
+  
 
   const filterBookedTimeSlots = (timeSlots: any[], bookings: any[]) => {
     const bookedSlots = bookings.map((booking) => ({
       startTime: new Date(`1970-01-10T${booking.startTime}:00`),
       endTime: new Date(`1970-01-10T${booking.endTime}:00`),
     }));
+    console.log('filtered booked slots:', bookedSlots);
 
-    return timeSlots.filter(
-      (slot) =>
-        !bookedSlots.some(
-          (bookedSlot) =>
-            slot.startTime < bookedSlot.endTime &&
-            slot.endTime > bookedSlot.startTime
-        )
-    );
+    return timeSlots.filter((slot) => {
+      return !bookedSlots.some((bookedSlot) => {
+        const slotStartTime = new Date(`1970-01-10T${slot.startTime}:00`);
+        const slotEndTime = new Date(`1970-01-10T${slot.endTime}:00`);
+
+        return (
+          slotStartTime < bookedSlot.endTime &&
+          slotEndTime > bookedSlot.startTime
+        );
+      });
+    });
   };
 
   // available time slots
