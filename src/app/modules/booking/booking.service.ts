@@ -62,7 +62,7 @@ const getAllFacilityFromDB = async () => {
 };
 
 const getSingleFacilityFromDB = async (userId: string) => {
-  const result = await Booking.find({ user: userId });
+  const result = await Booking.find({ user: userId }).populate('facility');
   return result;
 };
 

@@ -2,12 +2,12 @@ import { TErrorSources, TGenericErrorResponse } from '../interface/error';
 
 const handleDuplicteError = (err: any): TGenericErrorResponse => {
   const match = err.message.match(/"([^"]+)"/);
-  const extractedMessage = match && match[1];
+  const extractedMessage = match?.input;
 
-  const errorSources: TErrorSources = [
+  const errorMessages: TErrorSources = [
     {
       path: '',
-      message: `'${extractedMessage}' is already exists`,
+      message: extractedMessage,
     },
   ];
 
@@ -15,8 +15,8 @@ const handleDuplicteError = (err: any): TGenericErrorResponse => {
 
   return {
     statusCode,
-    message: '',
-    errorSources,
+    message: err?.stack,
+    errorMessages,
   };
 };
 
