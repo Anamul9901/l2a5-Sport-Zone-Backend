@@ -82,14 +82,13 @@ const getAvailabilFacilityFromDB = async (date: any) => {
   const bookings = await Booking.find({ date: startDate }).select(
     'date startTime endTime isBooked'
   );
-  console.log('bookings-----------------------:', bookings);
 
   // 24 hours time slots(1h).
   interface TimeSlot {
     startTime: string;
     endTime: string;
   }
-  
+
   const generateAllDayTimeSlots = (): TimeSlot[] => {
     const slots: TimeSlot[] = [];
     for (let hour = 0; hour < 24; hour++) {
@@ -99,10 +98,9 @@ const getAvailabilFacilityFromDB = async (date: any) => {
     }
     return slots;
   };
-  
+
   const availableTimeSlots = generateAllDayTimeSlots();
   console.log(availableTimeSlots);
-  
 
   const filterBookedTimeSlots = (timeSlots: any[], bookings: any[]) => {
     const bookedSlots = bookings.map((booking) => ({

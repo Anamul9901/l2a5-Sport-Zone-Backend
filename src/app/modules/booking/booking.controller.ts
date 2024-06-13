@@ -47,7 +47,7 @@ const getAvailabilBooking = catchAsync(async (req: any, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Bookings retrieved successfully',
+    message: 'Availability checked successfully',
     data: result,
   });
 });
