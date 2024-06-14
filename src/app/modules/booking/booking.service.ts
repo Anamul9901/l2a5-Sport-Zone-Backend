@@ -24,6 +24,7 @@ const createBookingIntoDB = async (payload: TBooking, userId: string) => {
     endTime,
   };
 
+  // if facility is already booked then throw error
   assignedValidSchedules.forEach((schedule) => {
     const existingStartTime: any = new Date(
       `1970-01-10T${schedule.startTime}:00`
@@ -56,6 +57,7 @@ const createBookingIntoDB = async (payload: TBooking, userId: string) => {
     throw new AppError(httpStatus.NOT_FOUND, `This Facility is Deleted!`);
   }
 
+  // calculte booking payable amount depends on facility pricePerHour
   const pricePerHour = facilityData?.pricePerHour;
   const start: any = new Date(`1970-01-10T${newSchedule.startTime}:00`);
   const end: any = new Date(`1970-01-10T${newSchedule.endTime}:00`);
@@ -73,7 +75,7 @@ const createBookingIntoDB = async (payload: TBooking, userId: string) => {
 };
 
 const getAllFacilityFromDB = async () => {
-  const result = await Booking.find().populate('facility');
+  const result = await Booking.find().populate('facility').populate('user');
   return result;
 };
 
@@ -82,17 +84,18 @@ const getAvailabilFacilityFromDB = async (date: any) => {
   const today = new Date();
   const formattedDate = today.toISOString().split('T')[0];
   const startDate = date2 ? date2 : formattedDate;
+
   // Retrieve bookings for the specified date
   const bookings = await Booking.find({ date: startDate }).select(
     'date startTime endTime isBooked'
   );
 
-  // 24 hours time slots(1h).
   interface TimeSlot {
     startTime: string;
     endTime: string;
   }
 
+  // create 24 hours time slots (1h).
   const generateAllDayTimeSlots = (): TimeSlot[] => {
     const slots: TimeSlot[] = [];
     for (let hour = 0; hour < 24; hour++) {
@@ -105,6 +108,7 @@ const getAvailabilFacilityFromDB = async (date: any) => {
 
   const availableTimeSlots = generateAllDayTimeSlots();
 
+  // all bookd time slots of search date
   const filterBookedTimeSlots = (timeSlots: any[], bookings: any[]) => {
     const bookedSlots = bookings.map((booking) => ({
       startTime: new Date(`1970-01-10T${booking.startTime}:00`),

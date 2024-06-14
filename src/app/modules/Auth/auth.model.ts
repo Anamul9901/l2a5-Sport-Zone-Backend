@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
 import { TUser } from './auth.interface';
-import bcrypt from 'bcrypt';
 import config from '../../config';
+const bcrypt = require('bcrypt');
 
 const userSchema = new Schema<TUser>(
   {
@@ -17,7 +17,6 @@ const userSchema = new Schema<TUser>(
     password: {
       type: String,
       required: true,
-      select: 0,
     },
     phone: {
       type: String,

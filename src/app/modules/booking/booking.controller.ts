@@ -2,7 +2,6 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { BookingService } from './booking.service';
-import auth from '../../middlwares/auth';
 import { JwtPayload } from 'jsonwebtoken';
 
 const createBooking = catchAsync(async (req: JwtPayload, res) => {

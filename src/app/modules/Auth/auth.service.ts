@@ -1,10 +1,10 @@
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
-import { User } from '../user/user.model';
 import { TLoginUser, TUser } from './auth.interface';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import config from '../../config';
+import { User } from './auth.model';
 
 const signUpUserIntoDB = async (payload: TUser) => {
   const result = await User.create(payload);
@@ -20,7 +20,7 @@ const loginUser = async (payload: TLoginUser) => {
     throw new AppError(httpStatus.NOT_FOUND, 'Thsis user is not found !');
   }
 
-  // checking if ther password is correct
+  // checking if the password is correct
   const isPasswordMatched = await bcrypt.compare(
     payload?.password,
     isUserExists?.password

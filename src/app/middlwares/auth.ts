@@ -1,7 +1,6 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
 import catchAsync from '../utils/catchAsync';
-import AppError from '../errors/AppError';
 import httpStatus from 'http-status';
 import config from '../config';
 import { TUserRole } from '../modules/facility/facility.interface';
@@ -9,6 +8,7 @@ import sendResponse from '../utils/sendResponse';
 
 const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    // get access token from headers
     const token = req.headers.authorization;
     if (!token) {
       sendResponse(res, {
@@ -18,6 +18,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
       });
     }
 
+    // decoded access token and check validaty
     const decoded = jwt.verify(
       token as string,
       config.jwt_access_secret as string

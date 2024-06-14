@@ -4,6 +4,7 @@ const handleDuplicteError = (err: any): TGenericErrorResponse => {
   const match = err.message.match(/"([^"]+)"/);
   const extractedMessage = match?.input;
 
+  // duplicate Errors
   const errorMessages: TErrorSources = [
     {
       path: '',
