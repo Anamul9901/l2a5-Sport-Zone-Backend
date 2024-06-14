@@ -139,7 +139,13 @@ const getSingleFacilityFromDB = async (userId: string) => {
   return result;
 };
 
-const deleteFacilityFromDB = async (id: string) => {
+const deleteFacilityFromDB = async (id: string, userId: string) => {
+  const userData = await Booking.findOne({ _id: id });
+  const objectId = userData?.user
+  const stringId = objectId?.toString()
+  if(userId !== stringId){
+    throw new AppError(httpStatus.UNAUTHORIZED, 'This is not your booking!')
+  }
   const result = await Booking.findByIdAndUpdate(
     id,
     { isBooked: 'canceled' },

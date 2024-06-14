@@ -73,9 +73,10 @@ const getSingleBooking = catchAsync(async (req: JwtPayload, res) => {
   });
 });
 
-const deleteBooking = catchAsync(async (req, res) => {
+const deleteBooking = catchAsync(async (req: JwtPayload, res) => {
+  const userId = req?.user?.userId
   const { id } = req.params;
-  const result = await BookingService.deleteFacilityFromDB(id);
+  const result = await BookingService.deleteFacilityFromDB(id, userId);
   if (!result) {
     sendResponse(res, {
       statusCode: httpStatus.NOT_FOUND,
