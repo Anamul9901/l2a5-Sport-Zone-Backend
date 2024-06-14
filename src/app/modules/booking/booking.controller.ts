@@ -5,8 +5,9 @@ import { BookingService } from './booking.service';
 import auth from '../../middlwares/auth';
 import { JwtPayload } from 'jsonwebtoken';
 
-const createBooking = catchAsync(async (req, res) => {
-  const result = await BookingService.createBookingIntoDB(req.body);
+const createBooking = catchAsync(async (req: JwtPayload, res) => {
+  const userId = req?.user?.userId;
+  const result = await BookingService.createBookingIntoDB(req.body, userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

@@ -4,7 +4,7 @@ import { TBooking } from './booking.interface';
 import { Booking } from './booking.model';
 import { Facility } from '../facility/facility.model';
 
-const createBookingIntoDB = async (payload: TBooking) => {
+const createBookingIntoDB = async (payload: TBooking, userId: string) => {
   const { date, startTime, endTime, facility } = payload;
 
   //get the all schedules of the faculties
@@ -64,7 +64,11 @@ const createBookingIntoDB = async (payload: TBooking) => {
 
   const payableAmount = Number(pricePerHour) * differenceInHours;
 
-  const result = await Booking.create({ ...payload, payableAmount });
+  const result = await Booking.create({
+    ...payload,
+    user: userId,
+    payableAmount,
+  });
   return result;
 };
 
@@ -100,14 +104,12 @@ const getAvailabilFacilityFromDB = async (date: any) => {
   };
 
   const availableTimeSlots = generateAllDayTimeSlots();
-  console.log(availableTimeSlots);
 
   const filterBookedTimeSlots = (timeSlots: any[], bookings: any[]) => {
     const bookedSlots = bookings.map((booking) => ({
       startTime: new Date(`1970-01-10T${booking.startTime}:00`),
       endTime: new Date(`1970-01-10T${booking.endTime}:00`),
     }));
-    console.log('filtered booked slots:', bookedSlots);
 
     return timeSlots.filter((slot) => {
       return !bookedSlots.some((bookedSlot) => {
