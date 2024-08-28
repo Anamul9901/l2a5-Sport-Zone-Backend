@@ -7,7 +7,6 @@ const OrderSchema = new mongoose.Schema<TOrder>(
       name: { type: String, required: true },
       email: { type: String, required: true },
       phone: { type: String, required: true },
-      address: { type: String, required: true },
     },
     facility: {
       type: Schema.Types.ObjectId,
@@ -29,6 +28,18 @@ const OrderSchema = new mongoose.Schema<TOrder>(
       default: 'Pending',
     },
     transactionId: {
+      type: String,
+      required: true,
+    },
+    date: {
+      type: String,
+      required: true,
+    },
+    startTime: {
+      type: String,
+      required: true,
+    },
+    endTime: {
       type: String,
       required: true,
     },
