@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { TBooking } from './booking.interface';
@@ -79,16 +80,19 @@ const getAllFacilityFromDB = async () => {
   return result;
 };
 
-const getAvailabilFacilityFromDB = async (date: any) => {
-  const date2 = date.date;
+const getAvailabilFacilityFromDB = async (queryDate: any) => {
+  const date2 = queryDate.date;
   const today = new Date();
   const formattedDate = today.toISOString().split('T')[0];
   const startDate = date2 ? date2 : formattedDate;
 
   // Retrieve bookings for the specified date
-  const bookings = await Booking.find({ date: startDate }).select(
-    'date startTime endTime isBooked'
-  );
+  const bookings = await Booking.find({
+    date: startDate,
+    facility: queryDate?.facility,
+  }).select('date startTime endTime isBooked');
+
+  // console.log('bookings--->>', bookings);
 
   interface TimeSlot {
     startTime: string;
@@ -141,10 +145,10 @@ const getSingleFacilityFromDB = async (userId: string) => {
 
 const deleteFacilityFromDB = async (id: string, userId: string) => {
   const userData = await Booking.findOne({ _id: id });
-  const objectId = userData?.user
-  const stringId = objectId?.toString()
-  if(userId !== stringId){
-    throw new AppError(httpStatus.UNAUTHORIZED, 'This is not your booking!')
+  const objectId = userData?.user;
+  const stringId = objectId?.toString();
+  if (userId !== stringId) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'This is not your booking!');
   }
   const result = await Booking.findByIdAndUpdate(
     id,

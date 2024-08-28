@@ -18,6 +18,10 @@ const facilitySchema = new Schema<TFacility>(
       type: String,
       required: true,
     },
+    image: {
+      type: String,
+      required: false,
+    },
     isDeleted: {
       type: Boolean,
       default: false,

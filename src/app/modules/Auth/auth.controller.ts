@@ -26,6 +26,9 @@ const loginUser = catchAsync(async (req, res) => {
   });
 });
 
+
+
+
 export const AuthControllers = {
   signUpUser,
   loginUser,

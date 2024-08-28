@@ -1,15 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { TFacility } from './facility.interface';
 import { Facility } from './facility.model';
 
 const createFacilityIntoDB = async (payload: TFacility) => {
   const result = await Facility.create(payload);
-  const { _id, name, description, pricePerHour, location, isDeleted } = result;
+  const { _id, name, description, pricePerHour, location, image, isDeleted } = result;
   const finalResult = {
     _id,
     name,
     description,
     pricePerHour,
     location,
+    image,
     isDeleted,
   };
   return finalResult;
@@ -19,7 +21,7 @@ const updateFacilityFromDB = async (id: string, payload: TFacility) => {
   const result = await Facility.findByIdAndUpdate({ _id: id }, payload, {
     new: true,
   });
-  const { _id, name, description, pricePerHour, location, isDeleted }: any =
+  const { _id, name, description, pricePerHour, location, image, isDeleted }: any =
     result;
   const finalResult = {
     _id,
@@ -27,6 +29,7 @@ const updateFacilityFromDB = async (id: string, payload: TFacility) => {
     description,
     pricePerHour,
     location,
+    image,
     isDeleted,
   };
   return finalResult;
@@ -43,7 +46,7 @@ const deleteFacilityFromDB = async (id: string) => {
     { isDeleted: true },
     { new: true }
   );
-  const { _id, name, description, pricePerHour, location, isDeleted }: any =
+  const { _id, name, description, pricePerHour, location, image, isDeleted }: any =
     result;
   const finalResult = {
     _id,
@@ -51,6 +54,7 @@ const deleteFacilityFromDB = async (id: string) => {
     description,
     pricePerHour,
     location,
+    image,
     isDeleted,
   };
   return finalResult;

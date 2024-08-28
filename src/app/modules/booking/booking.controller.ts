@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
@@ -74,7 +75,7 @@ const getSingleBooking = catchAsync(async (req: JwtPayload, res) => {
 });
 
 const deleteBooking = catchAsync(async (req: JwtPayload, res) => {
-  const userId = req?.user?.userId
+  const userId = req?.user?.userId;
   const { id } = req.params;
   const result = await BookingService.deleteFacilityFromDB(id, userId);
   if (!result) {
