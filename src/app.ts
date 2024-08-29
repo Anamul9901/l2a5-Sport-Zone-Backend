@@ -9,7 +9,7 @@ const app: Application = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173', 'https://l2-assign5-client.vercel.app'],
     credentials: true,
   })
 );

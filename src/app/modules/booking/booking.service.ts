@@ -92,7 +92,6 @@ const getAvailabilFacilityFromDB = async (queryDate: any) => {
     facility: queryDate?.facility,
   }).select('date startTime endTime isBooked');
 
-  // console.log('bookings--->>', bookings);
 
   interface TimeSlot {
     startTime: string;
