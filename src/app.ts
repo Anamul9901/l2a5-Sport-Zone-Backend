@@ -3,6 +3,7 @@ import express, { Application } from 'express';
 import router from './app/routes';
 import globalErrorHandler from './app/middlwares/globalErrorHandler';
 import notFound from './app/middlwares/notFound';
+import path from 'path';
 const app: Application = express();
 
 //parsers
@@ -13,7 +14,7 @@ app.use(
     credentials: true,
   })
 );
-
+app.use(express.static(path.join(__dirname, 'public', 'index.html')));
 app.use('/api', router);
 
 app.use(globalErrorHandler);

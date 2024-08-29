@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { model, Schema } from 'mongoose';
 import { TUser } from './auth.interface';
 import config from '../../config';

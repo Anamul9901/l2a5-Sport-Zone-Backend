@@ -9,7 +9,8 @@ import sendResponse from '../utils/sendResponse';
 const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     // get access token from headers
-    const token = req.headers.authorization;
+    const getToken = req.headers.authorization;
+    const token = getToken!.slice(7);
     if (!token) {
       sendResponse(res, {
         statusCode: httpStatus.UNAUTHORIZED,

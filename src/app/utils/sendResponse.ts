@@ -12,7 +12,7 @@ const sendResponse = <T>(res: Response, data: TRespons<T>) => {
   res.status(data?.statusCode).json({
     success: data.success,
     statusCode: data.statusCode,
-    messaage: data.message,
+    message: data.message,
     token: data.token,
     data: data.data,
   });

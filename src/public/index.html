@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Confirmation</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .confirmation-container {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px 40px;
+        max-width: 400px;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+
+      p {
+        font-size: 18px;
+        color: #333;
+        margin: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="confirmation-container">
+      <h1 id="message"></h1>
+      <p>Your payment was {{message2}}.</p>
+      <div class="button-row">
+        <a href="http://localhost:5173/" class="back-button">Go Back</a>
+      </div>
+    </div>
+
+    <style>
+      /* Container for the row */
+      .button-row {
+        display: flex;
+        justify-content: center; /* Center the button horizontally */
+        margin-top: 20px; /* Add some space above the button */
+      }
+
+      /* Styling for the "Go Back" button */
+      .back-button {
+        display: inline-block;
+        background-color: #007bff; /* Blue background */
+        color: white; /* White text */
+        font-weight: 600; /* Semi-bold text */
+        padding: 10px 20px; /* Padding inside the button */
+        border-radius: 5px; /* Rounded corners */
+        text-decoration: none; /* Remove underline from the link */
+        transition: background-color 0.3s ease; /* Smooth transition for background color */
+      }
+
+      /* Hover effect */
+      .back-button:hover {
+        background-color: #0056b3; /* Darker blue when hovered */
+      }
+    </style>
+
+    <script>
+      const message = '{{message}}'; // This value would be dynamically inserted from your server-side code.
+      const messageElement = document.getElementById('message');
+
+      messageElement.textContent = message;
+
+      if (message === 'Successfully Paid') {
+        messageElement.style.color = '#4CAF50'; // Green color
+      } else if (message === 'Payment Failed!') {
+        messageElement.style.color = '#F44336'; // Red color
+      }
+    </script>
+  </body>
+</html>
