@@ -43,46 +43,47 @@
       <h1 id="message"></h1>
       <p>Your payment was {{message2}}.</p>
       <div class="button-row">
-        <a href="http://localhost:5173/" class="back-button">Go Back</a>
+        <a href="https://l2-assign5-client.vercel.app/" class="back-button"
+          >Go Back</a
+        >
       </div>
     </div>
 
     <style>
-      /* Container for the row */
       .button-row {
         display: flex;
-        justify-content: center; /* Center the button horizontally */
-        margin-top: 20px; /* Add some space above the button */
+        justify-content: center;
+        margin-top: 20px;
       }
 
       /* Styling for the "Go Back" button */
       .back-button {
         display: inline-block;
-        background-color: #007bff; /* Blue background */
-        color: white; /* White text */
-        font-weight: 600; /* Semi-bold text */
-        padding: 10px 20px; /* Padding inside the button */
-        border-radius: 5px; /* Rounded corners */
-        text-decoration: none; /* Remove underline from the link */
-        transition: background-color 0.3s ease; /* Smooth transition for background color */
+        background-color: #007bff;
+        color: white;
+        font-weight: 600;
+        padding: 5px 10px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
       }
 
       /* Hover effect */
       .back-button:hover {
-        background-color: #0056b3; /* Darker blue when hovered */
+        background-color: #03468e;
       }
     </style>
 
     <script>
-      const message = '{{message}}'; // This value would be dynamically inserted from your server-side code.
+      const message = '{{message}}';
       const messageElement = document.getElementById('message');
 
       messageElement.textContent = message;
 
       if (message === 'Successfully Paid') {
-        messageElement.style.color = '#4CAF50'; // Green color
+        messageElement.style.color = '#4CAF50';
       } else if (message === 'Payment Failed!') {
-        messageElement.style.color = '#F44336'; // Red color
+        messageElement.style.color = '#F44336';
       }
     </script>
   </body>
